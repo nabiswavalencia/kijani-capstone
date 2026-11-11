@@ -23,9 +23,8 @@ Track A: Infrastructure-first.
 
 ## What Is Out of Scope
 
-- **Week 10 serverless receipt chain**: taught on the final Monday; adding it would leave no time to test the pipeline end to end.
+- **Week 10 serverless receipt chain**: adding it would leave no time to test the pipeline end to end.
 - **Prometheus and Alertmanager**: the laptop is close to its disk limit; Option B gives the same signal from existing logs.
-- **Ingress and TLS**: Services stay ClusterIP; outside access is a Week 9 Ingress follow-up.
 - **A real database**: `DB_HOST` proves configuration separation; storing payments is a separate project.
 
 ## Success Criteria
