@@ -1,0 +1,19 @@
+- name: Configure kk-payments for staging and production
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    # Step 1. Create one ConfigMap per environment so the same image can run in both.
+    # Step 2. Running the playbook again only changes what is different.
+    - name: Create the kk-payments-config ConfigMap
+      ansible.builtin.shell: >
+        kubectl create configmap kk-payments-config -n {{ item.ns }}
+        --from-literal=APP_ENV={{ item.env }}
+        --from-literal=DB_HOST={{ item.db }}
+        --dry-run=client -o yaml | kubectl apply -f -
+      register: result
+      changed_when: "'unchanged' not in result.stdout"
+      loop:
+        - { ns: kijani-staging, env: staging, db: staging-db.kijani.local }
+        - { ns: default, env: production, db: prod-db.kijani.local }
