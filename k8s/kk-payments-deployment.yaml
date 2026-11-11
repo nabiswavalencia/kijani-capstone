@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kk-payments
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kk-payments
+  template:
+    metadata:
+      labels:
+        app: kk-payments
+    spec:
+      # Step 1. Pull the private image from Docker Hub using the registry secret.
+      imagePullSecrets:
+        - name: kijani-registry-credentials
+      containers:
+        - name: kk-payments
+          image: IMAGE_PLACEHOLDER
+          ports:
+            - containerPort: 3001
+          # Step 2. Load APP_ENV and DB_HOST from the ConfigMap that Ansible created.
+          envFrom:
+            - configMapRef:
+                name: kk-payments-config
+          # Step 3. Only send traffic when /health answers, and restart the pod if it stops answering.
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m
