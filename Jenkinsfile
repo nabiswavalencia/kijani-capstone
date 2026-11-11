@@ -23,6 +23,7 @@ pipeline {
       agent {
         docker {
           image 'node:22.23.3-alpine'
+          args '-e HOME=/tmp'
           reuseNode true
         }
       }
