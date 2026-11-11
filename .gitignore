@@ -1,0 +1,4 @@
+terraform/.terraform/
+terraform/*.tfstate*
+deploy.yaml
+.env
